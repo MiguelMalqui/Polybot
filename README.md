@@ -8,6 +8,7 @@ per treballar amb polígons convexos.
   - [Prerequisits](#prerequisits)
   - [Instal·lació](#instal·lació)
   - [Usage](#usage)
+  - [Llenguatge](#llenguatge)  
   - [Decisions preses](#decisions preses)  
   - [Crèdits](#crèdits)
 
