@@ -6,10 +6,10 @@ per treballar amb polígons convexos.
 ## Índex
 
   - [Prerequisits](#prerequisits)
-  - [Instal·lació](#instal·lació)
+  - [Installació](#installació)
   - [Usage](#usage)
   - [Llenguatge](#llenguatge)  
-  - [Decisions preses](#decisions preses)  
+  - [Decisions preses](#decisions-preses)  
   - [Crèdits](#crèdits)
 
 ## Prerequisits
@@ -17,7 +17,7 @@ per treballar amb polígons convexos.
 Tenir instal·lat [Python 3](https://www.python.org/).
 
 
-## Instal·lació
+## Installació
 
 Per instal·lar els requeriments, executeu la següent comanda.
 ```bash
