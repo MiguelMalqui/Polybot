@@ -1,4 +1,4 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import CommandHandler, MessageHandler, filters, ApplicationBuilder, CallbackContext
 import telegram
 import os
 from antlr4 import *
@@ -6,16 +6,13 @@ from polybot.cl import *
 from polybot import Config
 
 
-def start(update, context):
-    text = '''Hi! I'm a bot that allows to work with convex polygons.'''
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=text,
-        parse_mode=telegram.ParseMode.MARKDOWN
+async def start(update: telegram.Update, context: CallbackContext):
+    await update.message.reply_text(
+        text='Hi! I\'m a bot that allows to work with convex polygons.',
     )
 
 
-def handle_message(update, context):
+async def handle_message(update: telegram.Update, context: CallbackContext):
     if 'polygons_dictionary' not in context.user_data:
         context.user_data['polygons_dictionary'] = {}
     try:
@@ -27,30 +24,25 @@ def handle_message(update, context):
         visitor = EvalVisitor(context.user_data['polygons_dictionary'])
         output, images_filenames = visitor.visit(tree)
         if output:
-            context.bot.send_message(
-                chat_id=update.effective_chat.id,
+            await update.message.reply_text(
                 text=output
             )
         for filename in images_filenames:
-            context.bot.send_photo(
-                chat_id=update.effective_chat.id,
-                photo=open(filename, 'rb')
-            )
+            with open(filename, 'rb') as f:
+                await update.message.reply_photo(
+                    photo=f,
+                    caption=f'Image: {filename}'
+                )
             os.remove(filename)
     except Exception as e:
         print(e)
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text='💣'
+        await update.message.reply_text(
+            text='An error occurred while processing your request. Please check your input and try again.'
         )
 
 
 def main():
-    updater = Updater(token=Config.TOKEN, use_context=True)
-    dispatcher = updater.dispatcher
-
-    dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(MessageHandler(Filters.text, handle_message))
-
-    updater.start_polling()
-    updater.idle()
+    application = ApplicationBuilder().token(Config.TOKEN).build()
+    application.add_handler(CommandHandler('start', start))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    application.run_polling()

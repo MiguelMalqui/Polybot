@@ -1,1 +1,1 @@
-TOKEN = "CopiaAquiElToken"
+TOKEN = "Copy your token here"
